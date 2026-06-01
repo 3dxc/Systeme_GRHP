@@ -1,0 +1,32 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+<div class="min-h-screen bg-gray-100 p-6 font-sans">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Espace {{ role }}</h1>
+                <p class="text-sm text-gray-500">Gestion globale du système GRHP</p>
+            </div>
+            <a href="{% url 'agents:index' %}" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition">
+                Déconnexion
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 class="text-gray-500 text-sm font-semibold uppercase">Contrôle Système</h3>
+                <p class="text-2xl font-bold text-emerald-600 mt-2">Actif</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 class="text-gray-500 text-sm font-semibold uppercase">Gestion des comptes</h3>
+                <a href="#" class="text-blue-600 hover:underline inline-block mt-2 font-medium">Créer un utilisateur →</a>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 class="text-gray-500 text-sm font-semibold uppercase">Registres</h3>
+                <a href="{% url 'agents:agent_list' %}" class="text-blue-600 hover:underline inline-block mt-2 font-medium">Voir la liste des agents →</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

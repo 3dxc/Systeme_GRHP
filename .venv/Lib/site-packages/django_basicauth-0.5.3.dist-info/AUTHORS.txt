@@ -1,0 +1,21 @@
+Author
+======
+
+* Hiroki Kiyohara (hirokiky@gmail.com)
+* Raphaël Barrois (raphael.barrois@polytechnique.org)
+* Adam Venturella (aventurella@gmail.com)
+* Tim Heap (hello@timheap.me)
+* rhoboro
+
+Bug reporting
+=============
+
+* Keith Solademi (ksolademi@gmail.com)
+* Hugo Castilho (hcastilho@gmail.com)
+
+Special Thanks
+==============
+
+* tshabs
+* aventurella
+* guettli

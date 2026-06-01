@@ -1,0 +1,131 @@
+/* ==========================================================================
+   1. CORRECTION ABSOLUE DE L'ÉCRAN DE CONNEXION (ANTI-ESPACE BLANC)
+   ========================================================================== */
+
+/* On cible la page de connexion uniquement pour forcer le plein écran sans marges */
+body.login-page {
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+/* On supprime les marges, padding et fonds forcés par Jazzmin autour de ton image */
+.login-page .wrapper,
+.login-page .content-wrapper,
+.login-page #content,
+.login-page #content-main,
+.login-page .content {
+    background: transparent !important; /* Conservé uniquement pour écraser le blanc forcé par le framework */
+    margin: 0 ;
+    padding: 0 ;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+}
+
+/* Annulation des boîtes restrictives par défaut d'AdminLTE */
+.login-page .login-box, 
+.login-page .login-card-body {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Masquage total de la navbar, sidebar et en-têtes UNIQUEMENT sur l'écran de connexion */
+.login-page .main-header, 
+.login-page .navbar, 
+.login-page .main-sidebar, 
+.login-page .brand-link,
+.login-page .content-header { 
+    display: none !important; /* Indispensable ici pour forcer AdminLTE à masquer son menu */
+}
+
+/* Suppression du footer blanc sur l'authentification */
+.login-page .main-footer {
+    display: none;
+}
+
+
+/* ==========================================================================
+   2. DESIGN GLOBAL DE L'APPLICATION (APPRÈS CONNEXION)
+   ========================================================================== */
+
+/* Structure des cartes à l'intérieur du Tableau de bord */
+.card { 
+    background-color: #ffffff; 
+    border: 1px solid #e5e7eb; 
+    border-radius: 0.5rem; 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); 
+    margin-bottom: 2rem; 
+    padding: 1.5rem; 
+}
+
+/* Style général du Footer global */
+.main-footer { 
+    display: flex; 
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #dee2e6;
+    background-color: #ffffff; 
+}
+
+/* Bloc utilisateur de la sidebar */
+.sidebar .user-panel {
+    display: flex; 
+    align-items: center;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Éléments de navigation internes */
+.content-header,
+.main-header, 
+.navbar, 
+.main-sidebar, 
+.brand-link,
+.user-menu { 
+    padding: 0.75rem 1.2rem; 
+    border-bottom: 1px solid #04529f;
+}
+
+
+/* ==========================================================================
+   3. LOGIQUE ET STYLE DES ONGLETS D'AUTHENTIFICATION
+   ========================================================================== */
+.auth-tabs {
+    display: flex;
+    gap: 1rem; 
+    margin-bottom: 1.5rem; 
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.auth-tabs button {
+    padding: 0.75rem 1.25rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    cursor: pointer;
+}
+
+.auth-tabs button.active {
+    background-color: #ffffff;
+    color: #047857; 
+    border-bottom: 5px solid #047857; 
+}
+
+.auth-tabs button:not(.active) {
+    color: #9ca3af;
+}
+
+.auth-tabs button:not(.active):hover {
+    color: #4b5563;
+    border-bottom-color: #d1d5db;
+}

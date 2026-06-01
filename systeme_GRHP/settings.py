@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+import mimetypes
+mimetypes.add_type("text/javascript", ".js", True)
+mimetypes.add_type("text/css", ".css", True)
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,6 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'agents.Utilisateur'
 
 INSTALLED_APPS = [
     'jazzmin',
@@ -37,10 +43,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Ton application
-    'test_app',
+    'django_extensions',
+    'django_filters',
+    
+    'agents',
+    
 ]
 MIDDLEWARE = [
+    #'basicauth.middleware.BasicAuthMiddleware', 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -48,7 +58,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'basicauth.middleware.BasicAuthMiddleware',  # 👈 À ajouter obligatoirement en premier
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     # ... le reste de tes middlewares
@@ -60,89 +69,103 @@ ROOT_URLCONF = 'systeme_GRHP.urls'
 BASICAUTH_USERS = {
     "directeur_rh": "SgRhP_Bamako_@2026_SecureKey",  # Nom d'utilisateur et mot de passe système
 }
-BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], # Cette ligne doit être exactement comme ça
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request', # Requis pour Jazzmin/Admin
+                'django.template.context_processors.request',  # 👈 Crucial pour Jazzmin et l'UI Builder
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
     },
 ]
+
 WSGI_APPLICATION = 'systeme_GRHP.wsgi.application'
 
-
-#Tuile colore pour le thème Jazzmin
+# ==============================================================================
+# CONFIGURATION JAZZMIN OPTIMISÉE POUR LE SGRHP
+# ==============================================================================
 JAZZMIN_SETTINGS = {
-    "site_title": "SGRHP Admin",
-    "site_brand": "SGRHP",
-    "welcome_sign": "Gestion SGRHP",
-    "copyright": "SGRHP Ltd",
-    "search_model": ["test_app.Agent", "auth.User"],
-    "custom_css": "admin/css/custom_admin.css",
+    # === Titres et Identité Visuelle ===
+    "site_title": "SGRHP Administration",
+    "site_header": "SGRHP",
+    "site_brand": "SGRHP Mali",
+    "site_logo": None,  # Change par le chemin de ton logo si nécessaire (ex: "img/logo.png")
+
+    # === Menu de navigation & Ergonomie ===
     "show_sidebar": True,
     "navigation_expanded": True,
-    "sidebar_fixed": True,
-    "sidebar": "sidebar-dark-primary",
     
-    # Menu du haut unique et fonctionnel
-    "topmenu_links": [
-        {"name": "Accueil", "url": "admin:index", "permissions": ["auth.view_user"]},
-        
+    # Masquer les applications techniques de Django qui n'intéressent pas les RH
+    "hide_apps": ["contenttypes", "sessions"],
+    "hide_models": ["admin.logentry"],
+    
+    # Ordre des applications dans le menu latéral
+    "order_with_respect_to": ["auth", "agents", "payroll", "conges", "dashboard"],
+    
+    # Liens personnalisés globaux dans le menu latéral
+    "side_menu_links": [
+        {"name": "Accueil", "url": "admin:index", "icon": "fas fa-home"},
+        {"name": "Tableau de bord", "url": "admin:dashboard", "icon": "fas fa-tachometer-alt"},
+        {"name": "Documentation", "url": "https://docs.djangoproject.com/en/6.0/", "icon": "fas fa-book"},
     ],
+
+    # === Liens du Menu Supérieur (Top Menu) ===
+    "topmenu_links": [
+        {"name": "Accueil", "url": "admin:index", "icon": "fas fa-home"},
+    ],
+
+    # === Personnalisation des Icônes (FontAwesome) ===
+    "default_icon": "fas fa-chevron-right",
+    "default_icon_parents": "fas fa-folder",
+    "default_icon_children": "fas fa-file",
     
-
-    # Toutes tes icônes regroupées
     "icons": {
-    "auth": "fas fa-users-cog",
-    "auth.user": "fas fa-user",
-    "auth.Group": "fas fa-users",
-    "test_app.Agent": "fas fa-user-tie",
-    "test_app.Service": "fas fa-building",
-    "test_app.Poste": "fas fa-briefcase",
-    "test_app.Conge": "fas fa-calendar-alt",
-    "test_app.Paie": "fas fa-money-check-alt",
-    "test_app.Evaluation": "fas fa-chart-line",
+        # Applications
+        "auth": "fas fa-shield-alt",
+        "agents": "fas fa-id-badge",
+        "payroll": "fas fa-credit-card",
+        "conges": "fas fa-calendar-check",
+        "dashboard": "fas fa-tachometer-alt",
+        
+        # Modèles spécifiques (nom de l'app.nom_du_modele en minuscules)
+        "auth.user": "fas fa-user-circle",
+        "auth.group": "fas fa-users",
+        "agents.agent": "fas fa-user",
+        "payroll.salaire": "fas fa-money-bill-wave",
+        "conges.conge": "fas fa-calendar-alt",
     },
-    "default_icon_parents": "fas fa-chevron-circle-right",
-    "default_icon_children": "fas fa-circle",
-}
-#Personnalisation de l'interface d'administration
-JAZZMIN_UI_CUSTOMIZER_CONFIG = {
-    "navbar_fixed": True,
-    "sidebar_fixed": True,
-    "sidebar": "sidebar-dark-primary",
-    "brand_colour": "navbar-primary",
-    "navbar": "navbar-dark",
-    "accent": "accent-primary",
-    "sidebar_nav_child_indent": True,
-    "button_classes": {
-    "primary": "btn-primary",
-    "secondary": "btn-secondary",
-    "info": "btn-info",
-    "warning": "btn-warning",
-    "danger": "btn-danger",
-    "success": "btn-success"
-    }
-}
+    
+    # === Interface & Formulaires ===
+    "changeform_format": "horizontal_tabs",  # Organisation propre des formulaires longs
+    "related_modal_active": True,            # Ouverture des relations dans des fenêtres modales
 
-
+    # === Thème Visuel ===
+    "theme": "flatly",
+    "dark_mode_theme": None,                 # Évite de forcer le mode sombre au rendu
+    "show_ui_builder": False,                # Désactivé en production (à passer à True si tu veux modifier le design en live)
+    
+    # Fichier CSS personnalisé
+    "custom_css": "css/style.css",
+}
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+
+
+load_dotenv() # Charge les variables du fichier .env
+
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'systeme_GRHP',
-        'USER': '',
+        'NAME': os.getenv('DB_NAME'),  # Récupère "systeme_GRHP" depuis le .env
+        'USER': os.getenv('DB_USER'),
         'PASSWORD': '',
-        'HOST': 'localhost\\SQLEXPRESS',
+        'HOST': os.getenv('DB_HOST'),  # Récupère "localhost\SQLEXPRESS" depuis le .env
         'PORT': '',
         'OPTIONS': {
             'driver': 'ODBC Driver 18 for SQL Server',
@@ -150,7 +173,6 @@ DATABASES = {
         },
     }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -185,4 +207,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# L'URL pour accéder aux fichiers dans le navigateur
 STATIC_URL = 'static/'
+
+# 1. Où Django COLLECTE les fichiers pour la production (votre dossier à la racine)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# 2. Où Django CHERCHE vos fichiers sources en développement
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'), 
+]

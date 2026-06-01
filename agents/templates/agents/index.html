@@ -1,0 +1,139 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+
+<div class="relative h-screen w-full bg-cover bg-center bg-no-repeat p-6 flex flex-col font-sans select-none overflow-hidden" 
+    style="background-image: url('{% static 'img/bg_ministere.png' %}');">
+
+    <div class="absolute inset-0 bg-white/5 backdrop-blur-[1px] pointer-events-none"></div>
+
+    <div class="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-between h-full pb-6">
+        
+        <div class="flex justify-between items-start w-full">
+            <div>
+                <span class="text-xs font-semibold tracking-wider text-orange-700 uppercase bg-orange-100/90 px-2.5 py-1 rounded-md shadow-sm">
+                    SGRHP — Version 3.0
+                </span>
+                <h1 class="text-4xl font-serif font-bold text-emerald-900 mt-2 tracking-tight drop-shadow-sm">
+                    Tableau de Bord RH
+                </h1>
+                <p class="text-sm text-gray-800 font-medium italic mt-1">
+                    Bureau des Ressources Humaines du Mali.
+                </p>
+            </div>
+            
+            <div class="text-right bg-white/40 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/40 shadow-sm">
+                <span class="text-[20px] uppercase tracking-widest text-gray-700 font-bold block"></span>
+                <p class="text-base font-semibold text-gray-900 mt-1.5 capitalize">
+                    {% now "l d F Y" %}
+                </p>
+            </div>
+        </div>
+
+        <div class="flex-1 flex items-center justify-center w-full">
+            <div class="bg-white/40 p-5 rounded-xl border border-white/30 flex flex-col justify-center items-center w-full max-w-md backdrop-blur-sm shadow-lg">
+                
+                <div class="auth-tabs flex w-full border-b border-gray-200 mb-4 bg-gray-50 rounded-t-lg overflow-hidden">
+                    <button id="tab-login" class="flex-1 py-2.5 text-sm font-bold text-center border-b-2 border-emerald-600 text-emerald-600" onclick="switchForm('login')">
+                        Se connecter
+                    </button>
+                    <button id="tab-register" class="flex-1 py-2.5 text-sm font-bold text-center border-b-2 text-gray-400 border-transparent hover:text-gray-600" onclick="switchForm('register')">
+                        S'inscrire
+                    </button>
+                </div>
+
+                <form id="auth-form" onsubmit="handleSubmit(event)" class="w-full space-y-4 text-left">
+                    {% csrf_token %}
+                    <h2 id="form-title" class="text-xl font-bold text-gray-800 text-center">Connexion</h2>
+
+                    <div class="input-group">
+                        <label for="user-profile" class="block text-xs font-semibold text-gray-600 mb-1">Votre Profil</label>
+                        <select id="user-profile" class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white" required>
+                            <option value="" disabled selected>Choisir un profil...</option>
+                            <option value="agent">Agent</option>
+                            <option value="supervisor">Superviseur</option>
+                            <option value="manager">Manager</option>
+                            <option value="comptable">Comptable</option>
+                            <option value="admin">Administrateur</option>
+                        </select>
+                    </div>
+
+                    <div id="name-group" class="input-group id-register-only hidden">
+                        <label for="user-name" class="block text-xs font-semibold text-gray-600 mb-1">Nom complet</label>
+                        <input type="text" id="user-name" placeholder="Ex: Mohamed Maïga" class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="user-email" class="block text-xs font-semibold text-gray-600 mb-1">Adresse Email</label>
+                        <input type="email" id="user-email" placeholder="exemple@domaine.com" class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="user-password" class="block text-xs font-semibold text-gray-600 mb-1">Mot de passe</label>
+                        <input type="password" id="user-password" placeholder="••••••••" class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600" required>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-bold rounded transition duration-200 shadow-sm mt-2">
+                        Se connecter
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="{% static 'js/script.js' %}"></script>
+
+<script>
+    // 🛠️ FONCTION DE TRAITEMENT ET REDIRECTION SELON LE RÔLE
+    function handleSubmit(event) {
+        event.preventDefault(); // Empêche le rechargement classique de la page
+        
+        const profile = document.getElementById('user-profile').value;
+        
+        // Redirection dynamique basée sur la valeur sélectionnée
+        switch (profile) {
+            case 'admin':
+                window.location.href = "{% url 'agents:dashboard_admin' %}";
+                break;
+            case 'manager':
+                window.location.href = "{% url 'agents:index' %}"; // Ou une autre page spécifique
+                break;
+            case 'agent':
+                window.location.href = "{% url 'agents:agent_list' %}";
+                break;
+            case 'supervisor':
+                window.location.href = "{% url 'agents:agent_list' %}"; // Ajuste le lien si nécessaire
+                break;
+            case 'comptable':
+                window.location.href = "{% url 'agents:index' %}"; // Ajuste le lien si nécessaire
+                break;
+            default:
+                alert("Veuillez sélectionner un profil valide.");
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const profileSelect = document.getElementById('user-profile');
+        const nameGroup = document.getElementById('name-group');
+        const nameInput = document.getElementById('user-name');
+        
+        profileSelect.addEventListener('change', function () {
+            const selectedProfile = this.value;
+            if (selectedProfile === 'admin' || selectedProfile === 'manager') {
+                nameGroup.classList.remove('hidden');
+                nameInput.setAttribute('required', 'required');
+            } else {
+                nameGroup.classList.add('hidden');
+                nameInput.removeAttribute('required');
+            }
+        });
+    });
+</script>
+{% endblock %}

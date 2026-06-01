@@ -1,0 +1,48 @@
+{% load custom_tags %}
+<form method="get">
+    {{ filter.form.as_p }}
+    <button type="submit">Filtrer</button>
+</form>
+
+<p>
+    Trier par : 
+    <a href="?{% query_transform request sort='nom' %}">Nom (A-Z)</a> | 
+    <a href="?{% query_transform request sort='-nom' %}">Nom (Z-A)</a> |
+    <a href="?{% query_transform request sort='date_recrutement' %}">Ancienneté</a>
+</p>
+
+<table>
+    <tr>
+        <th>Matricule</th>
+        <th>Nom Complet</th>
+        <th>Structure</th>
+        <th>Statut</th>
+        <th>Actions</th>
+    </tr>
+    {% for agent in agents %}
+    <tr>
+        <td>{{ agent.matricule }}</td>
+        <td>{{ agent.nom }} {{ agent.prenom }}</td>
+        <td>{{ agent.structure.nom }}</td>
+        <td>{{ agent.get_statut_display }}</td>
+        <td>
+            <a href="{% url 'agent_detail' agent.id %}">Voir</a> |
+            <a href="{% url 'agent_edit' agent.id %}">Modifier</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">Aucun agent trouvé.</td></tr>
+    {% endfor %}
+</table>
+
+{% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Précédent</a>
+        {% endif %}
+        <span>Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Suivant</a>
+        {% endif %}
+    </div>
+{% endif %}

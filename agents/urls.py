@@ -37,13 +37,13 @@ urlpatterns = [
     # Liste complète et filtrée des agents (ex: /agents/liste/)
     path('liste/', views.AgentListView.as_view(), name='agent_list'),
     
-    # Créer un nouvel agent (ex: /agents/nouveau/)
+    # Créer un nouvel agent (ex: /agents/nouveau/) -> utilise 'agent_create'
     path('nouveau/', views.AgentCreateView.as_view(), name='agent_create'),
     
     # Voir les détails complets d'un agent (ex: /agents/5/)
     path('<int:pk>/', views.AgentDetailView.as_view(), name='agent_detail'),
     
-    # Modifier les informations d'un agent (ex: /agents/5/modifier/)
+    # Modifier les informations d'un agent (ex: /agents/5/modifier/) -> utilise 'agent_edit'
     path('<int:pk>/modifier/', views.AgentUpdateView.as_view(), name='agent_edit'),
     
     # Supprimer définitivement un agent (ex: /agents/5/supprimer/)

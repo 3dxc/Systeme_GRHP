@@ -1,31 +1,77 @@
-{% extends "admin/base_site.html" %}
 {% block content %}
 <script src="https://cdn.tailwindcss.com"></script>
-<div class="min-h-screen bg-gray-100 p-6 font-sans">
-    <div class="max-w-7xl mx-auto">
-        <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-6">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="min-h-screen bg-gray-50/50 p-6 font-sans antialiased">
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200/80 gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Espace {{ role }}</h1>
-                <p class="text-sm text-gray-500">Gestion globale du système GRHP</p>
+                <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fas fa-cubes text-blue-600 text-xl"></i> Espace {{ role|default:"Administrateur" }}
+                </h1>
+                <p class="text-sm text-gray-500 mt-1">Système de Gestion des Ressources Humaines Publiques (SGRHP)</p>
             </div>
-            <a href="{% url 'agents:index' %}" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition">
+            <a href="{% url 'agents:index' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg text-sm font-semibold hover:bg-red-600 hover:text-white transition-all duration-200 shadow-sm">
+                <i class="fas fa-power-off text-xs"></i>
                 Déconnexion
             </a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <h3 class="text-gray-500 text-sm font-semibold uppercase">Contrôle Système</h3>
-                <p class="text-2xl font-bold text-emerald-600 mt-2">Actif</p>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200/80 flex flex-col justify-between group hover:border-emerald-200 transition-all">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider">Contrôle Système</h3>
+                        <span class="h-8 w-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+                            <i class="fas fa-heartbeat"></i>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4">
+                        <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <p class="text-2xl font-bold text-gray-900">Actif</p>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mt-4">Tous les modules fonctionnent normalement</p>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <h3 class="text-gray-500 text-sm font-semibold uppercase">Gestion des comptes</h3>
-                <a href="#" class="text-blue-600 hover:underline inline-block mt-2 font-medium">Créer un utilisateur →</a>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200/80 flex flex-col justify-between group hover:border-blue-200 transition-all">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider">Gestion des comptes</h3>
+                        <span class="h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
+                            <i class="fas fa-users-gear"></i>
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-3">Administrer les habilitations et créer de nouveaux utilisateurs.</p>
+                </div>
+                <div class="mt-6">
+                    <a href="#" class="w-full inline-flex items-center justify-between px-4 py-2 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-lg text-sm font-medium transition-all duration-200 group-hover:shadow-sm">
+                        <span>Créer un utilisateur</span>
+                        <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <h3 class="text-gray-500 text-sm font-semibold uppercase">Registres</h3>
-                <a href="{% url 'agents:agent_list' %}" class="text-blue-600 hover:underline inline-block mt-2 font-medium">Voir la liste des agents →</a>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200/80 flex flex-col justify-between group hover:border-purple-200 transition-all">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider">Registres</h3>
+                        <span class="h-8 w-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-sm">
+                            <i class="fas fa-folder-tree"></i>
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-3">Accéder aux fiches matriculaires de l'ensemble des agents.</p>
+                </div>
+                <div class="mt-6">
+                    <a href="{% url 'agents:agent_list' %}" class="w-full inline-flex items-center justify-between px-4 py-2 bg-purple-50 text-purple-700 hover:bg-purple-600 hover:text-white rounded-lg text-sm font-medium transition-all duration-200 group-hover:shadow-sm">
+                        <span>Voir la liste des agents</span>
+                        <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
             </div>
+
         </div>
     </div>
 </div>

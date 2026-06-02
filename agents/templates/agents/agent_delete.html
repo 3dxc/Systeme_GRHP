@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50/50 flex items-center justify-center p-6 font-sans antialiased">
+    
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl border border-gray-200/60 overflow-hidden">
+        
+        <div class="bg-red-50 px-6 py-4 border-b border-red-100 flex items-center gap-3">
+            <div class="h-10 w-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-lg shadow-sm">
+                <i class="fas fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <h2 class="text-sm font-bold text-red-900">Confirmation de suppression</h2>
+                <p class="text-xs text-red-500">Action irréversible</p>
+            </div>
+        </div>
+
+        <div class="p-6 space-y-4">
+            <p class="text-sm text-gray-600 leading-relaxed">
+                Êtes-vous absolument sûr de vouloir supprimer définitivement le dossier de l'agent public suivant du système SGRHP ?
+            </p>
+
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 font-medium space-y-1">
+                <span class="text-[10px] font-mono bg-gray-200/80 text-gray-600 px-1.5 py-0.5 rounded uppercase">
+                    Matricule: {{ object.matricule }}
+                </span>
+                <p class="text-sm font-bold text-gray-900 mt-1">
+                    {{ object.nom.upper }} {{ object.prenom }}
+                </p>
+                <p class="text-xs text-gray-500">
+                    {{ object.structure.nom|default:"Sans structure assignée" }}
+                </p>
+            </div>
+
+            <form method="post" class="flex items-center justify-end gap-3 pt-2">
+                {% csrf_token %}
+                <a href="{% url 'agents:agent_detail' object.id %}" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                    Annuler
+                </a>
+                <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold transition shadow-sm">
+                    <i class="fas fa-trash-can text-xs"></i> Supprimer définitivement
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

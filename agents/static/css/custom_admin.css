@@ -16,9 +16,9 @@ body.login-page {
 .login-page #content,
 .login-page #content-main,
 .login-page .content {
-    background: transparent !important; /* Conservé uniquement pour écraser le blanc forcé par le framework */
-    margin: 0 ;
-    padding: 0 ;
+    background: transparent !important; /* Pour écraser le blanc forcé par le framework */
+    margin: 0;
+    padding: 0;
     width: 100%;
     max-width: 100%;
     min-height: 100vh;
@@ -42,7 +42,7 @@ body.login-page {
 .login-page .main-sidebar, 
 .login-page .brand-link,
 .login-page .content-header { 
-    display: none !important; /* Indispensable ici pour forcer AdminLTE à masquer son menu */
+    display: none !important; /* Indispensable pour forcer AdminLTE à masquer son menu */
 }
 
 /* Suppression du footer blanc sur l'authentification */
@@ -52,7 +52,7 @@ body.login-page {
 
 
 /* ==========================================================================
-   2. DESIGN GLOBAL DE L'APPLICATION (APPRÈS CONNEXION)
+   2. DESIGN GLOBAL DE L'APPLICATION (APRÈS CONNEXION)
    ========================================================================== */
 
 /* Structure des cartes à l'intérieur du Tableau de bord */
@@ -128,4 +128,64 @@ body.login-page {
 .auth-tabs button:not(.active):hover {
     color: #4b5563;
     border-bottom-color: #d1d5db;
+}
+
+
+/* ==========================================================================
+   4. AGRANDISSEMENT, ÉTIREMENT ET RESPONSIVITÉ CRITIQUE DES MODALES (POPUP +)
+   ========================================================================== */
+
+/* Agrandissement de la boîte modale Bootstrap globale de Jazzmin */
+.modal-dialog {
+    max-width: 95% !important; /* Optimisé à 95% pour exploiter la largeur de l'écran */
+    width: 95% !important;
+    margin: 1.75rem auto;
+}
+
+/* Nettoyage des bordures et paddings de la modale */
+.modal-body {
+    padding: 0 !important;
+}
+
+/* On force l'iframe à s'étaler sur 100% de la largeur interne */
+.modal-body iframe {
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 82vh !important; /* Hauteur de vue fluide et confortable */
+    min-height: 82vh !important;
+    border: none;
+}
+
+/* --- CORRECTIF RESPONSIVE DANS L'IFRAME --- */
+/* Bloque le mode réduit "mobile" et force Django à s'étirer horizontalement */
+body.popup {
+    background-color: #f4f6f9 !important;
+    width: 100% !important;
+}
+
+body.popup #content,
+body.popup .content-wrapper,
+body.popup .container-fluid,
+body.popup .content,
+body.popup .row,
+body.popup .col-12,
+body.popup .card {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+}
+
+/* Force les fieldsets et structures d'onglets (horizontal_tabs) à se déployer */
+body.popup .nav-tabs-custom,
+body.popup fieldset {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Force tous les conteneurs de champs, lignes et sélecteurs Select2 à s'aligner */
+body.popup .form-group,
+body.popup .form-control,
+body.popup .select2-container {
+    width: 100% !important;
+    max-width: 100% !important;
 }

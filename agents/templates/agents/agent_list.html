@@ -1,48 +1,117 @@
 {% load custom_tags %}
-<form method="get">
-    {{ filter.form.as_p }}
-    <button type="submit">Filtrer</button>
-</form>
+{% block content %}
+<!-- Chargement des dépendances nécessaires (Tailwind + Icônes) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<p>
-    Trier par : 
-    <a href="?{% query_transform request sort='nom' %}">Nom (A-Z)</a> | 
-    <a href="?{% query_transform request sort='-nom' %}">Nom (Z-A)</a> |
-    <a href="?{% query_transform request sort='date_recrutement' %}">Ancienneté</a>
-</p>
+<div class="min-h-screen bg-gray-50/50 p-6 font-sans antialiased">
+    <div class="max-w-7xl mx-auto space-y-6">
 
-<table>
-    <tr>
-        <th>Matricule</th>
-        <th>Nom Complet</th>
-        <th>Structure</th>
-        <th>Statut</th>
-        <th>Actions</th>
-    </tr>
-    {% for agent in agents %}
-    <tr>
-        <td>{{ agent.matricule }}</td>
-        <td>{{ agent.nom }} {{ agent.prenom }}</td>
-        <td>{{ agent.structure.nom }}</td>
-        <td>{{ agent.get_statut_display }}</td>
-        <td>
-            <a href="{% url 'agent_detail' agent.id %}">Voir</a> |
-            <a href="{% url 'agent_edit' agent.id %}">Modifier</a>
-        </td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="5">Aucun agent trouvé.</td></tr>
-    {% endfor %}
-</table>
+        <!-- En-tête du Registre -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200/80 gap-4">
+            <div>
+                <h1 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fas fa-folder-open text-blue-600"></i> Registre Principal des Agents
+                </h1>
+                <p class="text-xs text-gray-500 mt-1">Filtres avancés et gestion des fiches de carrières</p>
+            </div>
+        </div>
 
-{% if is_paginated %}
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">Précédent</a>
+        <!-- Zone de Filtrage Dynamique -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200/80">
+            <form method="get" class="space-y-4">
+                <!-- Injection et design du formulaire Django automatique -->
+                <div class="prose prose-sm max-w-none text-gray-700 [&_p]:flex [&_p]:flex-col [&_p]:md:flex-row [&_p]:gap-2 [&_p]:items-start [&_p]:md:items-center [&_input]:border [&_input]:border-gray-300 [&_input]:rounded-lg [&_input]:px-3 [&_input]:py-2 [&_input]:text-sm [&_select]:border [&_select]:border-gray-300 [&_select]:rounded-lg [&_select]:px-3 [&_select]:py-2 [&_select]:text-sm">
+                    {{ filter.form.as_p }}
+                </div>
+                
+                <div class="pt-2 border-t border-gray-100">
+                    <button type="submit" class="inline-flex items-center gap-2 px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-semibold transition shadow-sm">
+                        <i class="fas fa-filter text-xs"></i> Filtrer la liste
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Barres d'outils et Tris persistants -->
+        <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600 bg-white px-4 py-3 rounded-lg border border-gray-200/60 shadow-sm">
+            <span class="font-semibold text-gray-700"><i class="fas fa-arrows-up-down text-gray-400 mr-1"></i> Trier par :</span>
+            <div class="flex items-center gap-1 divide-x divide-gray-200 font-medium">
+                <a href="?{% query_transform request sort='nom' %}" class="text-blue-600 hover:text-blue-700 px-2 transition">Nom (A-Z)</a>
+                <a href="?{% query_transform request sort='-nom' %}" class="text-blue-600 hover:text-blue-700 px-2 transition">Nom (Z-A)</a>
+                <a href="?{% query_transform request sort='date_recrutement' %}" class="text-blue-600 hover:text-blue-700 px-2 transition">Ancienneté</a>
+            </div>
+        </div>
+
+        <!-- Tableau des Fiches Agents -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            <th class="px-6 py-4">Matricule</th>
+                            <th class="px-6 py-4">Nom Complet</th>
+                            <th class="px-6 py-4">Structure</th>
+                            <th class="px-6 py-4">Statut</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                        {% for agent in agents %}
+                        <tr class="hover:bg-gray-50/60 transition-colors">
+                            <td class="px-6 py-4 font-mono font-bold text-gray-900">{{ agent.matricule }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-900">{{ agent.nom.upper }} {{ agent.prenom }}</td>
+                            <td class="px-6 py-4 text-gray-500">{{ agent.structure.nom|default:"Non assignée" }}</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                                    {{ agent.get_statut_display }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="inline-flex items-center gap-1.5">
+                                    <a href="{% url 'agent_detail' agent.id %}" class="inline-flex items-center gap-1 text-xs bg-white hover:bg-blue-50 text-blue-600 border border-blue-200 px-2.5 py-1.5 rounded-md font-medium transition shadow-sm" title="Consulter">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </a>
+                                    <a href="{% url 'agent_edit' agent.id %}" class="inline-flex items-center gap-1 text-xs bg-white hover:bg-amber-50 text-amber-600 border border-amber-200 px-2.5 py-1.5 rounded-md font-medium transition shadow-sm" title="Modifier">
+                                        <i class="fas fa-pen-to-square"></i> Modifier
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-12 text-center text-gray-400">
+                                <i class="fas fa-folder-open text-2xl block mb-2 text-gray-300"></i>
+                                Aucun agent trouvé pour ces critères.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination Fluide -->
+        {% if is_paginated %}
+        <div class="flex items-center justify-center gap-4 bg-white px-4 py-3 rounded-xl border border-gray-200/80 shadow-sm">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-gray-600 hover:text-blue-600 border border-gray-200 hover:border-blue-200 rounded-lg bg-gray-50 hover:bg-blue-50 transition">
+                <i class="fas fa-chevron-left text-[10px]"></i> Précédent
+            </a>
+            {% endif %}
+            
+            <span class="text-xs text-gray-500">
+                Page <strong class="text-gray-900 font-bold">{{ page_obj.number }}</strong> sur <span class="font-medium">{{ page_obj.paginator.num_pages }}</span>
+            </span>
+            
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-gray-600 hover:text-blue-600 border border-gray-200 hover:border-blue-200 rounded-lg bg-gray-50 hover:bg-blue-50 transition">
+                Suivant <i class="fas fa-chevron-right text-[10px]"></i>
+            </a>
+            {% endif %}
+        </div>
         {% endif %}
-        <span>Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">Suivant</a>
-        {% endif %}
+
     </div>
-{% endif %}
+</div>
+{% endblock %}

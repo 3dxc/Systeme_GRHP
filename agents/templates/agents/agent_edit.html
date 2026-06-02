@@ -1,0 +1,54 @@
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="min-h-screen bg-gray-50/50 p-6 font-sans antialiased">
+    <div class="max-w-3xl mx-auto space-y-6">
+
+        <a href="{% url 'agents:agent_list' %}" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition font-medium">
+            <i class="fas fa-arrow-left text-xs"></i> Retour au registre des agents
+        </a>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200/80 flex items-center gap-4">
+            <div class="h-12 w-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xl shadow-sm">
+                <i class="fas fa-user-gear"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-gray-900">
+                    {% if object %} Modifier la fiche de l'Agent {% else %} Enregistrer un nouvel Agent {% endif %}
+                </h1>
+                <p class="text-xs text-gray-500 mt-0.5">
+                    {% if object %} Modifications en cours pour le matricule : <span class="font-mono font-bold text-gray-700">{{ object.matricule }}</span> {% else %} Formulaire d'enrôlement initial dans le système SGRHP {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200/80">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="prose prose-sm max-w-none text-gray-700 space-y-4
+                    [&_p]:flex [&_p]:flex-col [&_p]:gap-1.5
+                    [&_label]:text-xs [&_label]:font-bold [&_label]:text-gray-700 [&_label]:uppercase [&_label]:tracking-wider
+                    [&_input]:w-full [&_input]:border [&_input]:border-gray-300 [&_input]:rounded-lg [&_input]:px-3 [&_input]:py-2 [&_input]:text-sm [&_input:focus]:outline-none [&_input:focus]:border-blue-500 [&_input:focus]:ring-1 [&_input:focus]:ring-blue-500
+                    [&_select]:w-full [&_select]:border [&_select]:border-gray-300 [&_select]:rounded-lg [&_select]:px-3 [&_select]:py-2 [&_select]:text-sm [&_select:focus]:outline-none [&_select:focus]:border-blue-500
+                    [&_input[type=checkbox]]:w-auto [&_input[type=checkbox]]:h-4 [&_input[type=checkbox]]:w-4 [&_input[type=checkbox]]:rounded [&_input[type=checkbox]]:text-blue-600 [&_p:has(input[type=checkbox])]:flex-row [&_p:has(input[type=checkbox])]:items-center [&_p:has(input[type=checkbox])]:gap-3">
+                    
+                    {{ form.as_p }}
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+                    <a href="{% url 'agents:agent_list' %}" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                        Annuler
+                    </a>
+                    <button type="submit" class="inline-flex items-center gap-2 px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-semibold transition shadow-sm">
+                        <i class="fas fa-floppy-disk text-xs"></i> 
+                        {% if object %} Sauvegarder les modifications {% else %} Confirmer l'enrôlement {% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

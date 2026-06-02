@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django_filters.views import FilterView
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 from .filters import AgentFilter
@@ -96,9 +96,13 @@ class AgentDetailView(DetailView):
 # UPDATE (Formulaire de modification d'un agent)
 class AgentUpdateView(UpdateView):
     model = Agent
+    # Le matricule est volontairement exclu pour éviter toute modification accidentelle d'identifiant unique
     fields = ['nom', 'prenom', 'structure', 'statut', 'corps', 'grade', 'echelon']
-    template_name = 'agents/agent_form.html'
-    success_url = reverse_lazy('agents:agent_list')
+    template_name = 'agents/agent_edit.html'  # Utilisation de ton nouveau fichier html dédié !
+
+    def get_success_url(self):
+        """ Redirige l'utilisateur vers la fiche détaillée de l'agent après modification """
+        return reverse('agents:agent_detail', kwargs={'pk': self.object.pk})
 
 
 # DELETE (Confirmation et suppression définitive d'un agent)

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50/50 p-6 font-sans antialiased">
+    <div class="max-w-4xl mx-auto space-y-6">
+
+        <div class="flex flex-wrap justify-between items-center gap-4">
+            <a href="{% url 'agents:agent_list' %}" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition font-medium">
+                <i class="fas fa-arrow-left text-xs"></i> Retour au registre complet
+            </a>
+            
+            <div class="flex items-center gap-2">
+                <a href="{% url 'agents:agent_edit' agent.id %}" class="inline-flex items-center gap-1.5 text-xs bg-white hover:bg-amber-50 text-amber-600 border border-amber-200 px-3 py-2 rounded-lg font-semibold transition shadow-sm">
+                    <i class="fas fa-pen-to-square"></i> Modifier la fiche
+                </a>
+                <a href="{% url 'agents:agent_delete' agent.id %}" class="inline-flex items-center gap-1.5 text-xs bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-3 py-2 rounded-lg font-semibold transition shadow-sm">
+                    <i class="fas fa-trash-can"></i> Supprimer l'agent
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 overflow-hidden">
+            <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-6 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="h-16 w-16 rounded-full bg-slate-800 border-2 border-slate-700 flex items-center justify-center text-2xl text-slate-300 font-bold">
+                        {{ agent.nom|slice:":1" }}{{ agent.prenom|slice:":1" }}
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">{{ agent.nom.upper }} {{ agent.prenom }}</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Structure : <span class="text-slate-200 font-medium">{{ agent.structure.nom|default:"Non spécifiée" }}</span></p>
+                    </div>
+                </div>
+                <div>
+                    {% if agent.est_actif %}
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Dossier Actif
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-red-500/10 text-red-400 border border-red-500/20">
+                        <span class="h-1.5 w-1.5 rounded-full bg-red-400"></span> Dossier Inactif
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 divide-y md:divide-y-0 md:gap-x-12">
+                <div class="space-y-4">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider pb-1 border-b border-gray-100">Données d'identification</h3>
+                    <div>
+                        <span class="text-xs text-gray-500 block">Code Matricule</span>
+                        <p class="text-sm font-mono font-bold text-gray-900 mt-0.5">{{ agent.matricule }}</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block">Nom de famille</span>
+                        <p class="text-sm font-semibold text-gray-800 mt-0.5">{{ agent.nom.upper }}</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block">Tous les prénoms</span>
+                        <p class="text-sm font-semibold text-gray-800 mt-0.5">{{ agent.prenom }}</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 pt-4 md:pt-0">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider pb-1 border-b border-gray-100">Affectation & Statut</h3>
+                    <div>
+                        <span class="text-xs text-gray-500 block">Service / Administration d'accueil</span>
+                        <p class="text-sm font-semibold text-gray-800 mt-0.5">{{ agent.service.nom|default:"Aucun service lié" }}</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block">Poste de travail occupé</span>
+                        <p class="text-sm font-semibold text-gray-800 mt-0.5">{{ agent.poste.intitule|default:"Aucune fonction définie" }}</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block">Statut de la relation contractuelle</span>
+                        <p class="text-sm font-medium text-blue-600 mt-0.5">{{ agent.get_statut_display|default:"Régulier" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

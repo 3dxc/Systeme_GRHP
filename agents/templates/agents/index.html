@@ -1,22 +1,33 @@
-{% extends "admin/base_site.html" %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Accueil</title>
+</head>
+<body>
+
 {% load i18n static %}
 
 {% block content %}
+<!-- Ressources Externes & Styles -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
 
-<div class="relative h-screen w-full bg-cover bg-center bg-no-repeat p-6 flex flex-col font-sans select-none overflow-hidden" 
-    style="background-image: url('{% static 'img/bg_ministere.png' %}');">
+<!-- Conteneur Principal -->
+<div class="min-h-screen bg-cover bg-center bg-no-repeat p-6 md:p-10 flex flex-col font-sans select-none overflow-y-auto relative" 
+     style="background-image: url('{% static 'img/bg_ministere.png' %}');">
 
-    <div class="absolute inset-0 bg-white/5 backdrop-blur-[1px] pointer-events-none"></div>
+    <!-- Overlay de flou -->
+    <div class="absolute inset-0 bg-white/10 backdrop-blur-[1px] pointer-events-none"></div>
 
-    <div class="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-between h-full pb-6">
+    <div class="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-between min-h-full pb-6 flex-1">
         
-        <div class="flex justify-between items-start w-full">
+        <!-- En-tête -->
+        <div class="flex flex-col sm:flex-row justify-between items-start w-full gap-4">
             <div>
                 <span class="text-xs font-semibold tracking-wider text-orange-700 uppercase bg-orange-100/90 px-2.5 py-1 rounded-md shadow-sm">
-                    SGRHP — Version 3.0
+                    SGRHP — Version 4.0
                 </span>
                 <h1 class="text-4xl font-serif font-bold text-emerald-900 mt-2 tracking-tight drop-shadow-sm">
                     Tableau de Bord RH
@@ -26,114 +37,150 @@
                 </p>
             </div>
             
-            <div class="text-right bg-white/40 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/40 shadow-sm">
-                <span class="text-[20px] uppercase tracking-widest text-gray-700 font-bold block"></span>
-                <p class="text-base font-semibold text-gray-900 mt-1.5 capitalize">
+            <!-- Date dynamique Django -->
+            <div class="text-right bg-white/50 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/40 shadow-sm shrink-0 self-end sm:self-start">
+                <p class="text-base font-semibold text-gray-900 capitalize">
                     {% now "l d F Y" %}
                 </p>
             </div>
         </div>
 
-        <div class="flex-1 flex items-center justify-center w-full">
-            <div class="bg-white/40 p-5 rounded-xl border border-white/30 flex flex-col justify-center items-center w-full max-w-md backdrop-blur-sm shadow-lg">
+        <!-- Section Formulaire -->
+        <div class="flex-1 flex items-center justify-center w-full my-6">
+            <div class="bg-white/80 p-6 rounded-xl border border-white/30 flex flex-col justify-center items-center w-full max-w-md backdrop-blur-md shadow-lg">
                 
-                <div class="auth-tabs flex w-full border-b border-gray-200 mb-4 bg-gray-50 rounded-t-lg overflow-hidden">
-                    <button id="tab-login" class="flex-1 py-2.5 text-sm font-bold text-center border-b-2 border-emerald-600 text-emerald-600" onclick="switchForm('login')">
+                <!-- Onglets Connexion / Inscription -->
+                <div class="auth-tabs w-full flex border-b border-gray-200 mb-4">
+                    <button id="tab-login" type="button" class="flex-1 py-2.5 text-sm font-bold text-center border-b-2 border-emerald-600 text-emerald-600" onclick="switchForm('login')">
                         Se connecter
                     </button>
-                    <button id="tab-register" class="flex-1 py-2.5 text-sm font-bold text-center border-b-2 text-gray-400 border-transparent hover:text-gray-600" onclick="switchForm('register')">
+                    <button id="tab-register" type="button" class="flex-1 py-2.5 text-sm font-bold text-center border-b-2 text-gray-400 border-transparent hover:text-gray-600" onclick="switchForm('register')">
                         S'inscrire
                     </button>
                 </div>
 
+                <!-- Formulaire Unique Unique -->
                 <form id="auth-form" onsubmit="handleSubmit(event)" class="w-full space-y-4 text-left">
                     {% csrf_token %}
-                    <h2 id="form-title" class="text-xl font-bold text-gray-800 text-center">Connexion</h2>
+                    <h2 id="form-title" class="text-xl font-bold text-gray-800 text-center hidden">Connexion</h2>
 
+                    <!-- Profil -->
                     <div class="input-group">
                         <label for="user-profile" class="block text-xs font-semibold text-gray-600 mb-1">Votre Profil</label>
                         <select id="user-profile" class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white" required>
                             <option value="" disabled selected>Choisir un profil...</option>
                             <option value="agent">Agent</option>
-                            <option value="supervisor">Superviseur</option>
                             <option value="manager">Manager</option>
                             <option value="comptable">Comptable</option>
                             <option value="admin">Administrateur</option>
                         </select>
                     </div>
 
-                    <div id="name-group" class="input-group id-register-only hidden">
+                    <!-- Nom Complet (Dynamique) -->
+                    <div id="name-group" class="input-group hidden">
                         <label for="user-name" class="block text-xs font-semibold text-gray-600 mb-1">Nom complet</label>
                         <input type="text" id="user-name" placeholder="Ex: Mohamed Maïga" class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600">
                     </div>
 
+                    <!-- Email -->
                     <div class="input-group">
                         <label for="user-email" class="block text-xs font-semibold text-gray-600 mb-1">Adresse Email</label>
                         <input type="email" id="user-email" placeholder="exemple@domaine.com" class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600" required>
                     </div>
 
+                    <!-- Mot de passe -->
                     <div class="input-group">
                         <label for="user-password" class="block text-xs font-semibold text-gray-600 mb-1">Mot de passe</label>
                         <input type="password" id="user-password" placeholder="••••••••" class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600" required>
                     </div>
 
+                    <!-- Bouton Submit -->
                     <button type="submit" id="submit-btn" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-bold rounded transition duration-200 shadow-sm mt-2">
                         Se connecter
                     </button>
                 </form>
-
             </div>
         </div>
 
     </div>
 </div>
 
+<!-- Scripts -->
 <script src="{% static 'js/script.js' %}"></script>
 
 <script>
-    // 🛠️ FONCTION DE TRAITEMENT ET REDIRECTION SELON LE RÔLE
-    function handleSubmit(event) {
-        event.preventDefault(); // Empêche le rechargement classique de la page
+    let currentMode = 'login'; 
+
+    function switchForm(mode) {
+        currentMode = mode;
+        const tabLogin = document.getElementById('tab-login');
+        const tabRegister = document.getElementById('tab-register');
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.getElementById('submit-btn');
         
+        if (mode === 'login') {
+            tabLogin.className = "flex-1 py-2.5 text-sm font-bold text-center border-b-2 border-emerald-600 text-emerald-600";
+            tabRegister.className = "flex-1 py-2.5 text-sm font-bold text-center border-b-2 text-gray-400 border-transparent hover:text-gray-600";
+            formTitle.textContent = "Connexion";
+            submitBtn.textContent = "Se connecter";
+        } else {
+            tabRegister.className = "flex-1 py-2.5 text-sm font-bold text-center border-b-2 border-emerald-600 text-emerald-600";
+            tabLogin.className = "flex-1 py-2.5 text-sm font-bold text-center border-b-2 text-gray-400 border-transparent hover:text-gray-600";
+            formTitle.textContent = "Créer un compte";
+            submitBtn.textContent = "S'inscrire";
+        }
+        
+        checkNameVisibility();
+    }
+
+    function checkNameVisibility() {
+        const profileSelect = document.getElementById('user-profile');
+        const nameGroup = document.getElementById('name-group');
+        const nameInput = document.getElementById('user-name');
+        const selectedProfile = profileSelect.value;
+
+        if (currentMode === 'register' || selectedProfile === 'admin' || selectedProfile === 'manager') {
+            nameGroup.classList.remove('hidden');
+            nameInput.setAttribute('required', 'required');
+        } else {
+            nameGroup.classList.add('hidden');
+            nameInput.removeAttribute('required');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('user-profile').addEventListener('change', checkNameVisibility);
+    });
+
+    function handleSubmit(event) {
+        event.preventDefault(); 
+        
+        if (currentMode === 'register') {
+            alert("Inscription réussie ! Traitement des données en cours...");
+            return;
+        }
+
         const profile = document.getElementById('user-profile').value;
         
-        // Redirection dynamique basée sur la valeur sélectionnée
         switch (profile) {
             case 'admin':
                 window.location.href = "{% url 'agents:dashboard_admin' %}";
                 break;
             case 'manager':
-                window.location.href = "{% url 'agents:index' %}"; // Ou une autre page spécifique
+                window.location.href = "{% url 'agents:dashboard_manager' %}"; 
                 break;
             case 'agent':
-                window.location.href = "{% url 'agents:agent_list' %}";
-                break;
-            case 'supervisor':
-                window.location.href = "{% url 'agents:agent_list' %}"; // Ajuste le lien si nécessaire
+                window.location.href = "{% url 'agents:dashboard_agent' %}";
                 break;
             case 'comptable':
-                window.location.href = "{% url 'agents:index' %}"; // Ajuste le lien si nécessaire
+                window.location.href = "{% url 'agents:dashboard_comptable' %}"; 
                 break;
             default:
                 alert("Veuillez sélectionner un profil valide.");
         }
     }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const profileSelect = document.getElementById('user-profile');
-        const nameGroup = document.getElementById('name-group');
-        const nameInput = document.getElementById('user-name');
-        
-        profileSelect.addEventListener('change', function () {
-            const selectedProfile = this.value;
-            if (selectedProfile === 'admin' || selectedProfile === 'manager') {
-                nameGroup.classList.remove('hidden');
-                nameInput.setAttribute('required', 'required');
-            } else {
-                nameGroup.classList.add('hidden');
-                nameInput.removeAttribute('required');
-            }
-        });
-    });
 </script>
 {% endblock %}
+
+</body>
+</html>

@@ -1,17 +1,10 @@
-{% extends "admin/base_site.html" %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGRHP | Gestion de la Solde & Comptabilité</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+<div class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased -m-4 p-6">
+
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-xl mb-6">
         <div>
             <h1 class="text-xl font-bold bg-gradient-to-r from-amber-400 to-emerald-400 bg-clip-text text-transparent">
                 SGRHP — Gestion de la Solde
@@ -21,19 +14,24 @@
 
         <div class="flex items-center gap-4">
             <div class="text-right">
-                <span class="text-xs text-slate-400 uppercase tracking-wider block">Trésor Public Mali</span>
-                <p class="text-sm font-semibold text-emerald-400">Budget Alloué OK</p>
+                <span class="text-xs text-slate-500 uppercase tracking-wider block font-mono">Trésor Public Mali</span>
+                <div class="flex items-center justify-end gap-1.5 mt-0.5">
+                    <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <p class="text-sm font-semibold text-emerald-400">Budget Alloué OK</p>
+                </div>
             </div>
-            <a href="{% url 'agents:index' %}" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold transition">
+            <a href="{% url 'agents:index' %}" class="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold transition shadow-sm">
+                <i class="fas fa-arrow-left text-[10px] opacity-60"></i>
                 Retour Accueil
             </a>
         </div>
     </header>
 
-    <main class="p-6 max-w-7xl mx-auto space-y-6">
+    <main class="max-w-7xl mx-auto space-y-6">
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-slate-800/40 border border-slate-700/60 rounded-xl p-5 flex items-center justify-between">
+            
+            <div class="bg-slate-800/40 border border-slate-700/60 rounded-xl p-5 flex items-center justify-between backdrop-blur-sm">
                 <div>
                     <p class="text-sm text-slate-400 font-medium">Masse Salariale Engagée</p>
                     <h3 class="text-2xl font-bold mt-1 text-emerald-400" id="comptable-masse">Calcul en cours...</h3>
@@ -44,10 +42,10 @@
                 </div>
             </div>
 
-            <div class="bg-slate-800/40 border border-slate-700/60 rounded-xl p-5 flex items-center justify-between">
+            <div class="bg-slate-800/40 border border-slate-700/60 rounded-xl p-5 flex items-center justify-between backdrop-blur-sm">
                 <div>
                     <p class="text-sm text-slate-400 font-medium">Primes & Indemnités traitées</p>
-                    <h3 class="text-2xl font-bold mt-1 text-slate-100">1,420,000 XOF</h3>
+                    <h3 class="text-2xl font-bold mt-1 text-slate-100">1 420 000 XOF</h3>
                     <p class="text-xs text-blue-400 mt-1">Logement, Garde, Déplacement</p>
                 </div>
                 <div class="h-12 w-12 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-xl">
@@ -55,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="bg-slate-800/40 border border-slate-700/60 rounded-xl p-5 flex items-center justify-between">
+            <div class="bg-slate-800/40 border border-slate-700/60 rounded-xl p-5 flex items-center justify-between backdrop-blur-sm">
                 <div>
                     <p class="text-sm text-slate-400 font-medium">Bulletins Émis ce mois</p>
                     <h3 class="text-2xl font-bold mt-1 text-amber-400">99.1%</h3>
@@ -68,10 +66,11 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
             <div class="lg:col-span-2 bg-slate-800/30 border border-slate-700/50 rounded-xl p-5 space-y-4">
                 <div class="flex justify-between items-center">
                     <h2 class="text-base font-semibold text-slate-200">Derniers Éléments de Paie à valider</h2>
-                    <span class="text-xs text-slate-500">Aperçu des 5 derniers agents</span>
+                    <span class="text-xs text-slate-500 font-medium bg-slate-800 px-2 py-1 rounded border border-slate-700/60">Aperçu des 5 derniers agents</span>
                 </div>
                 
                 <div class="overflow-x-auto">
@@ -84,22 +83,25 @@
                                 <th class="pb-3 text-right font-medium">Statut Paie</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800 text-sm text-slate-300">
+                        <tbody class="divide-y divide-slate-800/60 text-sm text-slate-300">
                             {% for agent in agents|slice:":5" %}
-                            <tr>
+                            <tr class="group hover:bg-slate-800/20 transition-colors duration-150">
                                 <td class="py-3">
-                                    <span class="font-medium text-slate-100 block">{{ agent.nom.upper }} {{ agent.prenom }}</span>
+                                    <span class="font-medium text-slate-100 block group-hover:text-blue-400 transition-colors">{{ agent.nom.upper }} {{ agent.prenom }}</span>
                                     <span class="text-xs text-slate-500 font-mono">{{ agent.matricule }}</span>
                                 </td>
                                 <td class="py-3 text-xs font-mono text-amber-400">Grade {{ agent.grade|default:"A" }} (E{{ agent.echelon|default:"1" }})</td>
                                 <td class="py-3 text-xs text-slate-400">{{ agent.structure|default:"Non spécifié" }}</td>
                                 <td class="py-3 text-right">
-                                    <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs px-2 py-0.5 rounded">Calculé</span>
+                                    <span class="inline-flex bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs px-2 py-0.5 rounded font-medium">Calculé</span>
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="4" class="py-6 text-center text-slate-500">Aucune donnée de solde disponible.</td>
+                                <td colspan="4" class="py-8 text-center text-slate-500">
+                                    <i class="fas fa-inbox block text-xl mb-2 text-slate-600"></i>
+                                    Aucune donnée de solde disponible.
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -110,31 +112,30 @@
             <div class="bg-slate-800/30 border border-slate-700/50 rounded-xl p-5 space-y-4">
                 <h2 class="text-base font-semibold text-slate-200">Traitement Budgétaire</h2>
                 <div class="flex flex-col gap-2">
-                    <button class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-100 font-medium text-sm py-2.5 px-4 rounded-lg flex items-center justify-between transition">
-                        <span><i class="fas fa-calculator mr-2"></i> Lancer le Calcul Global de la Paie</span>
-                        <i class="fas fa-play text-xs"></i>
+                    <button class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-100 font-medium text-sm py-2.5 px-4 rounded-lg flex items-center justify-between transition shadow-lg shadow-emerald-600/10 group">
+                        <span><i class="fas fa-calculator mr-2 group-hover:rotate-12 transition"></i> Lancer le Calcul Global de la Paie</span>
+                        <i class="fas fa-play text-xs opacity-80"></i>
                     </button>
-                    <button class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg font-medium text-sm py-2.5 px-4 flex items-center justify-between transition">
-                        <span><i class="fas fa-university mr-2"></i> Générer le Fichier des Virements (VBA)</span>
-                        <i class="fas fa-download text-xs opacity-60"></i>
+                    <button class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg font-medium text-sm py-2.5 px-4 flex items-center justify-between transition group">
+                        <span><i class="fas fa-university mr-2 text-slate-400 group-hover:text-slate-200"></i> Générer le Fichier des Virements (VBA)</span>
+                        <i class="fas fa-download text-xs opacity-60 group-hover:translate-y-0.5 transition"></i>
                     </button>
                 </div>
             </div>
         </div>
     </main>
+</div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let cumulMasse = 0;
-            {% for paie in paies %}
-                cumulMasse += parseFloat("{{ paie.net_a_payer_stocke }}");
-            {% empty %}
-                cumulMasse = 14850000; // Montant d'exemple par défaut si le tableau paies est vide au départ
-            {% endfor %}
-            
-            document.getElementById('comptable-masse').innerText = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', maximumFractionDigits: 0 }).format(cumulMasse);
-        });
-    </script>
-</body>
-</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let cumulMasse = 0;
+        {% for paie in paies %}
+            cumulMasse += parseFloat("{{ paie.net_a_payer_stocke }}") || 0;
+        {% empty %}
+            cumulMasse = 14850000; // Simulation par défaut si vide
+        {% endfor %}
+        
+        document.getElementById('comptable-masse').innerText = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', maximumFractionDigits: 0 }).format(cumulMasse);
+    });
+</script>
 {% endblock %}

@@ -1,18 +1,10 @@
-{% extends "admin/base_site.html" %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGRHP | Tableau de Bord Administrateur</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- En-tête Global -->
-    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+<div class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased -m-4 p-6">
+
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 rounded-xl mb-6">
         <div>
             <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-teal-400 bg-clip-text text-transparent">
                 SGRHP Mali
@@ -20,14 +12,12 @@
             <p class="text-xs text-slate-400">Système de Gestion des Ressources Humaines Publiques — {{ role }}</p>
         </div>
 
-        <!-- Alerte Prioritaire Système -->
-        <div class="hidden lg:flex items-center gap-2 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-xl text-xs text-red-400 font-semibold animate-pulse">
+        <div class="hidden lg:flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl text-xs text-emerald-400 font-semibold">
             <i class="fas fa-shield-halved"></i>
-            <span>ALERTES PRIORITAIRES : 0 brèches détectées</span>
+            <span>STATUT SÉCURITÉ : 0 brèche détectée</span>
         </div>
 
-        <!-- Barre de recherche rapide -->
-        <div class="w-1/3 relative">
+        <div class="w-full md:w-1/3 relative">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
                 <i class="fas fa-search"></i>
             </span>
@@ -35,29 +25,27 @@
                 class="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
         </div>
 
-        <!-- Profil & Déconnexion -->
         <div class="flex items-center gap-3">
             <div class="text-right">
                 <p class="text-sm font-medium">{{ request.user.username|default:"admin_root" }}</p>
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
-                    Super-Utilisateur
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    Admin
                 </span>
             </div>
-            <a href="{% url 'agents:index' %}" class="h-10 w-10 rounded-full bg-slate-800 hover:bg-red-900/30 border border-slate-700 flex items-center justify-center transition" title="Déconnexion">
-                <i class="fas fa-power-off text-slate-400 hover:text-red-400"></i>
+            <a href="{% url 'agents:index' %}" class="h-10 w-10 rounded-full bg-slate-800 hover:bg-red-900/40 border border-slate-700 flex items-center justify-center transition group" title="Déconnexion">
+                <i class="fas fa-power-off text-slate-400 group-hover:text-red-400 transition"></i>
             </a>
         </div>
     </header>
 
-    <main class="p-6 max-w-7xl mx-auto space-y-6">
+    <main class="max-w-7xl mx-auto space-y-6">
 
-        <!-- Compteurs et KPIs Administrateur (Vue d'ensemble de la base de données) -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             
             <div class="bg-slate-800/40 border border-slate-700/60 rounded-xl p-5 flex items-center justify-between backdrop-blur-sm">
                 <div>
                     <p class="text-sm text-slate-400 font-medium">Effectif Global</p>
-                    <h3 class="text-2xl font-bold mt-1 text-slate-100">{{ agents.count|default:"2,450" }}</h3>
+                    <h3 class="text-2xl font-bold mt-1 text-slate-100">{{ agents.count|default:"2450" }}</h3>
                     <p class="text-xs text-emerald-400 mt-1"><i class="fas fa-circle text-[8px] mr-1"></i> Agents synchronisés</p>
                 </div>
                 <div class="h-12 w-12 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-xl">
@@ -93,21 +81,21 @@
                     <h3 class="text-2xl font-bold mt-1 text-emerald-500">99.9%</h3>
                     <p class="text-xs text-slate-400 mt-1">Contrôle système actif</p>
                 </div>
-                <div class="h-12 w-12 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xl">
+                <div class="h-12 w-12 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl">
                     <i class="fas fa-server"></i>
                 </div>
             </div>
 
         </div>
 
-        <!-- Section Principale : Logs & Actions Systèmes -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- Registre récent & Journaux d'Audit -->
             <div class="lg:col-span-2 bg-slate-800/30 border border-slate-700/50 rounded-xl p-5 space-y-4">
                 <div class="flex items-center justify-between">
                     <h2 class="text-base font-semibold text-slate-200">Journal des connexions & Actions récentes (Sécurité)</h2>
-                    <span class="text-xs text-slate-500">Temps réel</span>
+                    <span class="text-xs text-slate-500 flex items-center gap-1.5">
+                        <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span> Temps réel
+                    </span>
                 </div>
                 
                 <div class="overflow-x-auto">
@@ -120,81 +108,89 @@
                                 <th class="pb-3 font-medium">Horodatage</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800 text-sm text-slate-300">
+                        <tbody class="divide-y divide-slate-800/60 text-sm text-slate-300">
                             <tr>
                                 <td class="py-3">
                                     <span class="font-medium text-slate-100 block">Diarra Modibo</span>
                                     <span class="text-xs text-emerald-400">Comptable</span>
                                 </td>
-                                <td class="py-3 text-xs">Émission de masse des bulletins de mai</td>
-                                <td class="py-3 text-xs"><span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Module_Solde</span></td>
-                                <td class="py-3 text-slate-400 text-xs font-mono">Il y a 5 min</td>
+                                <td class="py-3 text-xs text-slate-400">Émission de masse des bulletins de mai</td>
+                                <td class="py-3 text-xs"><span class="bg-slate-800 px-2 py-1 rounded border border-slate-700 font-mono text-slate-400">Module_Solde</span></td>
+                                <td class="py-3 text-slate-500 text-xs font-mono">Il y a 5 min</td>
                             </tr>
                             <tr>
                                 <td class="py-3">
                                     <span class="font-medium text-slate-100 block">Traoré Aminata</span>
                                     <span class="text-xs text-blue-400">Manager RH</span>
                                 </td>
-                                <td class="py-3 text-xs">Création de fiche (Nouvel Agent)</td>
-                                <td class="py-3 text-xs"><span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Registre_Agents</span></td>
-                                <td class="py-3 text-slate-400 text-xs font-mono">Il y a 24 min</td>
+                                <td class="py-3 text-xs text-slate-400">Création de fiche (Nouvel Agent)</td>
+                                <td class="py-3 text-xs"><span class="bg-slate-800 px-2 py-1 rounded border border-slate-700 font-mono text-slate-400">Registre_Agents</span></td>
+                                <td class="py-3 text-slate-500 text-xs font-mono">Il y a 24 min</td>
                             </tr>
                             <tr>
                                 <td class="py-3">
                                     <span class="font-medium text-slate-100 block">Keita Ousmane</span>
                                     <span class="text-xs text-purple-400">Superviseur</span>
                                 </td>
-                                <td class="py-3 text-xs">Approbation de l'acte d'avancement ML-4012</td>
-                                <td class="py-3 text-xs"><span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Validation_Visas</span></td>
-                                <td class="py-3 text-slate-400 text-xs font-mono">Il y a 1h 12m</td>
+                                <td class="py-3 text-xs text-slate-400">Approbation de l'acte d'avancement ML-4012</td>
+                                <td class="py-3 text-xs"><span class="bg-slate-800 px-2 py-1 rounded border border-slate-700 font-mono text-slate-400">Validation_Visas</span></td>
+                                <td class="py-3 text-slate-500 text-xs font-mono">Il y a 1h 12m</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3">
+                                    <span class="font-medium text-slate-100 block">Baby Fanta</span>
+                                    <span class="text-xs text-red-400">Maitenance</span>
+                                </td>
+                                <td class="py-3 text-xs text-slate-400">Inspection et Controle</td>
+                                <td class="py-3 text-xs"><span class="bg-slate-800 px-2 py-1 rounded border border-slate-700 font-mono text-slate-400">Validation_Equipements</span></td>
+                                <td class="py-3 text-slate-500 text-xs font-mono">Il y a 4h </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Actions Administratives Exclusives -->
             <div class="bg-slate-800/30 border border-slate-700/50 rounded-xl p-5 space-y-4">
                 <h2 class="text-base font-semibold text-slate-200">Administration Système</h2>
                 
                 <div class="flex flex-col gap-2">
-                    <!-- Liens Django Admin standard ou personnalisés (Jazzmin) -->
-                    <a href="/admin/auth/user/add/" target="_blank" class="w-full bg-blue-600 hover:bg-blue-500 text-slate-100 font-medium text-sm py-2.5 px-4 rounded-lg flex items-center justify-between transition">
+                    <a href="admin/agents/agent/add/" target="_blank" class="w-full bg-blue-600 hover:bg-blue-500 text-slate-100 font-medium text-sm py-2.5 px-4 rounded-lg flex items-center justify-between transition shadow-lg shadow-blue-600/10">
                         <span><i class="fas fa-user-shield mr-2"></i> Créer un Compte Utilisateur</span>
                         <i class="fas fa-chevron-right text-xs opacity-60"></i>
                     </a>
-                    <a href="{% url 'agents:agent_list' %}" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg font-medium text-sm py-2.5 px-4 flex items-center justify-between transition">
+                    <a href="{% url 'agents:agent_list' %}" class="w-full bg-slate-800 hover:bg-slate-700/80 text-slate-300 border border-slate-700 rounded-lg font-medium text-sm py-2.5 px-4 flex items-center justify-between transition">
                         <span><i class="fas fa-folder-open mr-2"></i> Voir le registre complet</span>
                         <i class="fas fa-chevron-right text-xs opacity-60"></i>
                     </a>
-                    <a href="/admin/" target="_blank" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg font-medium text-sm py-2.5 px-4 flex items-center justify-between transition">
+                    <a href="{% url 'agents:agent_create' %}" class="w-full bg-slate-800 hover:bg-slate-700/80 text-slate-300 border border-slate-700 rounded-lg font-medium text-sm py-2.5 px-4 flex items-center justify-between transition">
+                        <span><i class="fas fa-user-plus mr-2 text-blue-400"></i> Enregistrer un agent</span>
+                        <i class="fas fa-plus text-xs opacity-60"></i>
+                    </a>
+                    <a href="/admin/" target="_blank" class="w-full bg-slate-800 hover:bg-slate-700/80 text-slate-300 border border-slate-700 rounded-lg font-medium text-sm py-2.5 px-4 flex items-center justify-between transition">
                         <span><i class="fas fa-database mr-2"></i> Console Django Admin (Jazzmin)</span>
                         <i class="fas fa-chevron-right text-xs opacity-60"></i>
                     </a>
-                    <button class="w-full bg-slate-800/40 border border-dashed border-slate-700 text-slate-400 rounded-lg font-medium text-xs py-3 px-4 text-left">
+                    <div class="w-full bg-slate-800/20 border border-dashed border-slate-700 text-slate-400 rounded-lg font-medium text-xs py-3 px-4 text-left">
                         <span class="text-slate-300 font-bold block mb-1"><i class="fas fa-cloud-arrow-up mr-1 text-teal-400"></i> Sauvegarde automatisée</span>
                         Prochaine sauvegarde de la base de données PostgreSQL dans 4 heures.
-                    </button>
+                    </div>
                 </div>
             </div>
 
         </div>
     </main>
+</div>
 
-    <!-- Gestion du calcul de la masse salariale par JS -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let totalMasse = 0;
-            {% for paie in paies %}
-                totalMasse += parseFloat("{{ paie.net_a_payer_stocke }}");
-            {% empty %}
-                totalMasse = 143890000; // Montant simulé d'exemple si la variable 'paies' est vide
-            {% endfor %}
-            
-            document.getElementById('masse-salariale-kpi').innerText = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', maximumFractionDigits: 0 }).format(totalMasse);
-        });
-    </script>
-    
-</body>
-</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let totalMasse = 0;
+        {% for paie in paies %}
+            totalMasse += parseFloat("{{ paie.net_a_payer_stocke }}") || 0;
+        {% empty %}
+            totalMasse = 143000; 
+        {% endfor %}
+        
+        document.getElementById('masse-salariale-kpi').innerText = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', maximumFractionDigits: 0 }).format(totalMasse);
+    });
+</script>
 {% endblock %}

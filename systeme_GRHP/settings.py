@@ -59,7 +59,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', 
     # ... le reste de tes middlewares
 ]
 
@@ -105,8 +105,20 @@ JAZZMIN_SETTINGS = {
     "hide_apps": ["contenttypes", "sessions"],
     "hide_models": ["admin.logentry"],
     
-    # Ordre des applications dans le menu latéral
-    "order_with_respect_to": ["auth", "agents", "payroll", "conges", "dashboard"],
+    # Ordre d'affichage précis dans le menu latéral (Modèles et Applications)
+    "order_with_respect_to": [
+        # 1. Gestion des accès et de la sécurité (Placés ensemble tout en haut)
+        "auth.group",               # Groupes natifs
+        "agents.role",              # Rôles personnalisés
+        "agents.utilisateur",       # Utilisateurs (Modèle custom fonctionnel)
+        
+        # 2. Ordre global des applications si nécessaire
+        "auth", 
+        "agents", 
+        "payroll", 
+        "conges", 
+        "dashboard"
+    ],
     
     # Liens personnalisés globaux dans le menu latéral
     "side_menu_links": [
@@ -120,38 +132,49 @@ JAZZMIN_SETTINGS = {
         {"name": "Accueil", "url": "admin:index", "icon": "fas fa-home"},
     ],
 
-    # === Personnalisation des Icônes (FontAwesome) ===
     "default_icon": "fas fa-chevron-right",
     "default_icon_parents": "fas fa-folder",
     "default_icon_children": "fas fa-file",
     
     "icons": {
-        # Applications
+        # --- Application Authentification & Autorisations ---
         "auth": "fas fa-shield-alt",
-        "agents": "fas fa-id-badge",
-        "payroll": "fas fa-credit-card",
-        "conges": "fas fa-calendar-check",
-        "dashboard": "fas fa-tachometer-alt",
+        "auth.group": "fas fa-users-cog",
         
-        # Modèles spécifiques (nom de l'app.nom_du_modele en minuscules)
-        "auth.user": "fas fa-user-circle",
-        "auth.group": "fas fa-users",
-        "agents.agent": "fas fa-user",
+        # --- Application Principale / Module Agents & Structure ---
+        "agents": "fas fa-id-badge",
+        "agents.role": "fas fa-user-tag",
+        "agents.utilisateur": "fas fa-user-shield",
+        "agents.agent": "fas fa-user-tie",              # Icône d'agent professionnel
+        "agents.structure": "fas fa-sitemap",            # Organigramme pour la structure
+        "agents.service": "fas fa-building",             # Bâtiment/Direction pour les services
+        "agents.poste": "fas fa-briefcase",              # Mallette pour les intitulés de postes
+        "agents.grilleindiciaire": "fas fa-gavel",       # Symbole de règle/loi ou grille indiciaire
+        
+        # --- Module Carrière, Absences & RH ---
+        "agents.evolutioncarriere": "fas fa-chart-line", # Graphique ascendant pour l'évolution
+        "agents.conge": "fas fa-calendar-times",         # Calendrier pour les absences
+        
+        # --- Module Évaluations ---
+        "agents.evaluationannuelle": "fas fa-clipboard-check", # Fiche d'évaluation annuelle
+        "agents.evaluation": "fas fa-star",                    # Étoile de notation pour les entretiens
+        
+        # --- Module Paie & Finances ---
+        "agents.paie": "fas fa-file-invoice-dollar",     # Bulletin de paie officiel avec dollar/monnaie
+        
+        # --- Compatibilité si tu as scindé en plusieurs apps Django ---
         "payroll.salaire": "fas fa-money-bill-wave",
-        "conges.conge": "fas fa-calendar-alt",
+        "payroll.paie": "fas fa-file-invoice-dollar",
+        "conges.conge": "fas fa-calendar-times",
     },
     
     # === Interface & Formulaires ===
-    "changeform_format": "horizontal_tabs",  # Organisation propre des formulaires longs
-    "related_modal_active": True,            # Ouverture des relations dans des fenêtres modales
+    "changeform_format": "horizontal_tabs",  
+    "related_modal_active": True,            
 
     # === Thème Visuel ===
     "theme": "flatly",
-    "dark_mode_theme": None,                 # Évite de forcer le mode sombre au rendu
-    "show_ui_builder": False,                # Désactivé en production (à passer à True si tu veux modifier le design en live)
-    
-    # Fichier CSS personnalisé
-    "custom_css": "css/style.css",
+    "custom_css": "css/custom_admin.css",
 }
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
@@ -219,3 +242,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'), 
 ]
+
+# Permet à Django d'afficher ses propres pages dans des iframes (requis pour les modales Jazzmin)
+X_FRAME_OPTIONS = 'SAMEORIGIN'
